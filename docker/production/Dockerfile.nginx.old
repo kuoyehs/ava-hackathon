@@ -1,0 +1,15 @@
+FROM nginx:1.13.5-alpine
+RUN printf "https://ftp.yzu.edu.tw/Linux/alpine/v3.5/main\nhttps://ftp.yzu.edu.tw/Linux/alpine/v3.5/community" > /etc/apk/repositories
+
+COPY site/production /etc/nginx/conf.d
+
+RUN mkdir /etc/nginx/ssl
+COPY site/ca/bundle.crt /etc/nginx/ssl/
+COPY site/ca/server.key /etc/nginx/ssl/
+COPY site/ca/ovroot.cer /etc/nginx/ssl/
+COPY site/ca/ca.cer /etc/nginx/ssl/
+
+RUN chmod 700 /etc/nginx/ssl
+RUN chmod -R 600 /etc/nginx/ssl/bundle.crt /etc/nginx/ssl/server.key /etc/nginx/ssl/ovroot.cer /etc/nginx/ssl/ca.cer
+
+WORKDIR /app
